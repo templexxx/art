@@ -13,7 +13,6 @@ The main idea is from [`<The Adaptive Radix Tree: ARTful Indexing for Main-Memor
 
 The implementation is based on [UncP/aili](https://github.com/UncP/aili/tree/master/art) with these optimizations:
 
-1. Saving more memory: Compress data structure, removing useless fields
+1. Compress data structure, removing useless fields
 2. More APIs/features
-3. Add node32 (there are 32chars for comparisons)
-4. Configs for enhancement
+3. Add more types of inner nodes for saving memory

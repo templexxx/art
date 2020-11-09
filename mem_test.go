@@ -3,6 +3,7 @@ package artree
 import (
 	"bytes"
 	"encoding/binary"
+	"math/rand"
 	"testing"
 )
 
@@ -56,5 +57,21 @@ func TestCompareAndSwap16Bytes(t *testing.T) {
 	}
 	if !bytes.Equal(x.before, magic128) || !bytes.Equal(x.after, magic128) {
 		t.Fatal("wrong magic")
+	}
+}
+
+func BenchmarkCAS16B(b *testing.B) {
+
+	dst := alignedBlock(16, 16)
+	o := make([]byte, 16)
+	n := make([]byte, 16)
+	rand.Read(o)
+	rand.Read(n)
+
+	b.SetBytes(16)
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		_ = cas16b(&dst[0], &o[0], &n[0])
 	}
 }

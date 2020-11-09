@@ -32,27 +32,27 @@ func TestCompareAndSwap16Bytes(t *testing.T) {
 		binary.LittleEndian.PutUint64(old[8:], val)
 
 		binary.LittleEndian.PutUint64(newV[:8], val+1)
-		binary.LittleEndian.PutUint64(newV[8:], val+1)
+		binary.LittleEndian.PutUint64(newV[8:], val+2)
 
 		copy(x.i, old)
 
 		if !cas16b(&x.i[0], &old[0], &newV[0]) {
-			t.Fatalf("should have swapped %#x %#x", val, val+1)
+			t.Fatal("should have swapped")
 		}
 		if !bytes.Equal(x.i, newV) {
-			t.Fatalf("wrong x.i after swap: x.i=%#x val+1=%#x", x.i, val+1)
+			t.Fatalf("wrong x.i after swap: x.i=%#x exp=%#x", x.i, newV)
 		}
 
 		copy(x.i, newV)
 
-		binary.LittleEndian.PutUint64(nnv[:8], val+2)
-		binary.LittleEndian.PutUint64(nnv[8:], val+2)
+		binary.LittleEndian.PutUint64(nnv[:8], val+3)
+		binary.LittleEndian.PutUint64(nnv[8:], val+4)
 
 		if cas16b(&x.i[0], &old[0], &nnv[0]) {
-			t.Fatalf("should not have swapped %#x %#x", val, val+2)
+			t.Fatal("should not have swapped")
 		}
 		if !bytes.Equal(x.i, newV) {
-			t.Fatalf("wrong x.i after swap: x.i=%#x val+1=%#x", x.i, val+1)
+			t.Fatalf("wrong x.i after swap: x.i=%#x val+1=%#x", x.i, newV)
 		}
 	}
 	if !bytes.Equal(x.before, magic128) || !bytes.Equal(x.after, magic128) {

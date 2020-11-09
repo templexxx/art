@@ -1,6 +1,8 @@
 # artree
 [Adaptive Radix Tree](https://db.in.tum.de/~leis/papers/ART.pdf) in Go.
 
+Only supports X86-64.
+
 ## Why Adaptive Radix Tree
 
 Main memory capacities have grown up to a point
@@ -13,5 +15,6 @@ used for main-memory indexes, are fast but only support point
 queries.
 
 Adaptive Radix Tree overcomes these shortcomings.
+
 
 

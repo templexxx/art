@@ -11,8 +11,15 @@ ART(Adaptive Radix Tree) is designed for main memory index:
 
 The main idea is from [`<The Adaptive Radix Tree: ARTful Indexing for Main-Memory Databases>`](https://db.in.tum.de/~leis/papers/ART.pdf).
 
-The implementation is based on [UncP/aili](https://github.com/UncP/aili/tree/master/art) with these optimizations:
+The implementation is based on ：
 
-1. Compress data structure, removing useless fields
-2. More APIs/features
-3. Add more types of inner nodes for saving memory
+1. [UncP/aili](https://github.com/UncP/aili/tree/master/art) 
+
+2. `<The ART of Practical Synchronization>`  
+
+3. [flode/ARTSynchronized](https://github.com/flode/ARTSynchronized)
+
+Thanks for their contribution!
+
+## 
+

@@ -1,12 +1,11 @@
 #include "textflag.h"
 
-// func cas16b(dst, old, new *byte) (swapped bool)
-//Compare RDX:RAX with m128. If equal, set ZF and load
-//  CMPXCHG16B m128
-//   RCX:RBX into m128. Else, clear ZF and load m128 into
-//  RDX:RAX.
-
-TEXT ·cas16b(SB), NOSPLIT, $0-25
+// func CAS16B(dst, old, new *byte) (swapped bool)
+//
+// Compare RDX:RAX with m128.
+// If equal, set ZF and load CMPXCHG16B m128 RCX:RBX into m128.
+// Else, clear ZF and load m128 into RDX:RAX.
+TEXT ·CAS16B(SB), NOSPLIT, $0-25
     MOVQ  dst+0(FP), R8
     MOVQ  old+8(FP), R9
     MOVQ  new+16(FP), R10

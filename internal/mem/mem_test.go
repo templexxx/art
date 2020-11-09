@@ -1,4 +1,4 @@
-package artree
+package mem
 
 import (
 	"bytes"
@@ -24,7 +24,7 @@ func TestCompareAndSwap16Bytes(t *testing.T) {
 	old := make([]byte, 16)
 	newV := make([]byte, 16)
 	nnv := make([]byte, 16)
-	x.i = alignedBlock(16, 16)
+	x.i = AlignedBlock(16, 16)
 
 	for val := uint64(1); val+val > val; val += val {
 
@@ -36,7 +36,7 @@ func TestCompareAndSwap16Bytes(t *testing.T) {
 
 		copy(x.i, old)
 
-		if !cas16b(&x.i[0], &old[0], &newV[0]) {
+		if !CAS16B(&x.i[0], &old[0], &newV[0]) {
 			t.Fatal("should have swapped")
 		}
 		if !bytes.Equal(x.i, newV) {
@@ -48,7 +48,7 @@ func TestCompareAndSwap16Bytes(t *testing.T) {
 		binary.LittleEndian.PutUint64(nnv[:8], val+3)
 		binary.LittleEndian.PutUint64(nnv[8:], val+4)
 
-		if cas16b(&x.i[0], &old[0], &nnv[0]) {
+		if CAS16B(&x.i[0], &old[0], &nnv[0]) {
 			t.Fatal("should not have swapped")
 		}
 		if !bytes.Equal(x.i, newV) {
@@ -62,7 +62,7 @@ func TestCompareAndSwap16Bytes(t *testing.T) {
 
 func BenchmarkCAS16B(b *testing.B) {
 
-	dst := alignedBlock(16, 16)
+	dst := AlignedBlock(16, 16)
 	o := make([]byte, 16)
 	n := make([]byte, 16)
 	rand.Read(o)
@@ -72,6 +72,6 @@ func BenchmarkCAS16B(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		_ = cas16b(&dst[0], &o[0], &n[0])
+		_ = CAS16B(&dst[0], &o[0], &n[0])
 	}
 }

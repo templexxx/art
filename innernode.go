@@ -3,36 +3,36 @@ package artree
 import "unsafe"
 
 type Node2 struct {
+	header   *byte
 	keys     [2]byte
 	children *[2]unsafe.Pointer
-	header   *byte
 }
 
 type Node5 struct {
+	header   *byte
 	keys     [5]byte
 	children *[5]unsafe.Pointer
-	header   *byte
 }
 
 type Node16 struct {
-	keys     [16]byte
-	children *[16]unsafe.Pointer
 	header   *byte
+	keys     *byte // [16]byte, could use SSE
+	children *[16]unsafe.Pointer
 }
 
 type Node32 struct {
-	indexes  [32]byte
-	children *[32]unsafe.Pointer
 	header   *byte
+	keys     *byte // [32]byte, could use AVX
+	children *[32]unsafe.Pointer
 }
 
 type Node64 struct {
-	indexes  [256]byte
-	children *[64]unsafe.Pointer
 	header   *byte
+	indexes  *byte // [256]byte, indicating char -> children[i]
+	children *[64]unsafe.Pointer
 }
 
 type Node256 struct {
-	children *[256]unsafe.Pointer
 	header   *byte
+	children *[256]unsafe.Pointer
 }

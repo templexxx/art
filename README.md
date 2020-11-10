@@ -1,6 +1,6 @@
 # ART
 
-Designed for main memory index(Read optimization write exclusion):
+Designed for main memory index:
 
 1. Read optimization
 2. Write exclusion
@@ -24,7 +24,8 @@ Adaptive Radix Tree overcomes these shortcomings.
 
 You could find more details in [`<The Adaptive Radix Tree: ARTful Indexing for Main-Memory Databases>`](https://db.in.tum.de/~leis/papers/ART.pdf).
 
-ART(Adaptive Radix Tree) is designed for main memory index:
+What's more, one important invariant of ART is that every insertion/deletion order results in the same tree because there are no rebalancing operations.
+Which means it's easier to implement thread-safe structure.
 
 ## Why Adaptive Radix Tree is not popular
 

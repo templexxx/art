@@ -1,8 +1,15 @@
 package artree
 
+import "github.com/templexxx/cpu"
+
+func init() {
+	if !cpu.X86.HasCMPXCHG16B {
+		panic("art need CMPXCHG16B feature, but not supported in this machine")
+	}
+}
+
 // ART implements The Adaptive Radix Tree.
 type ART struct {
-
 }
 
 func (t *ART) Insert() {

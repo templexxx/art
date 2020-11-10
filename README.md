@@ -26,9 +26,24 @@ You could find more details in [`<The Adaptive Radix Tree: ARTful Indexing for M
 
 ART(Adaptive Radix Tree) is designed for main memory index:
 
+## Why Adaptive Radix Tree is not popular
+
+It was proposed for the first time in 2010, it's too new for a memory index structure.
+
+There is no mature implementation in present.
+
 # Limitation
 
-Only supports X86-64.
+## Platform
+
+Only supports X86-64:
+
+16bytes value could be accessed atomically.
+
+## Cannot mix pointer and value in inner node
+
+Go's invalid pointer checking will find the invalid pointer(value). Although we can disable it,
+it may cause unpredictable collapse.
 
 # Acknowledge
 

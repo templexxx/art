@@ -16,6 +16,35 @@ func init() {
 	binary.LittleEndian.PutUint64(magic128[8:], 0xdeddeadbeefbeef)
 }
 
+func TestAtomicLoad16B(t *testing.T) {
+	var x struct {
+		before []uint8
+		i      []byte
+		after  []uint8
+	}
+	x.before = magic128
+	x.after = magic128
+	x.i = MakeAlignedBlock(16, 16)
+
+	for delta := uint64(1); delta+delta > delta; delta += delta {
+		k := AtomicLoad16B(&x.i[0])
+		if !bytes.Equal(k[:], x.i) {
+			t.Fatalf("delta=%d i=%d k=%d", delta, x.i, k)
+		}
+
+		xi0 := binary.LittleEndian.Uint64(x.i[:8])
+		xi0 += delta
+		xi1 := binary.LittleEndian.Uint64(x.i[8:])
+		xi1 -= delta
+
+		binary.LittleEndian.PutUint64(x.i[:8], delta+2)
+		binary.LittleEndian.PutUint64(x.i[8:], ^(delta + 2))
+	}
+	if !bytes.Equal(x.before, magic128) || !bytes.Equal(x.after, magic128) {
+		t.Fatal("wrong magic")
+	}
+}
+
 func TestAtomicCAS16B(t *testing.T) {
 
 	var x struct {

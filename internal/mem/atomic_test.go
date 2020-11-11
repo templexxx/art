@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"crypto/rand"
 	"encoding/binary"
+	"runtime"
 	"testing"
+	"unsafe"
 )
 
 var (
@@ -121,6 +123,135 @@ func TestAtomicCAS16B(t *testing.T) {
 	}
 	if !bytes.Equal(x.before, magic128) || !bytes.Equal(x.after, magic128) {
 		t.Fatal("wrong magic")
+	}
+}
+
+// Tests of correct behavior, with contention.
+// (Is the function atomic?)
+//
+// For each function, we write a "hammer" function that repeatedly
+// uses the atomic operation to add 1 to a value. After running
+// multiple hammers in parallel, check that we end with the correct
+// total.
+// Swap can't add 1, so it uses a different scheme.
+// The functions repeatedly generate a pseudo-random number such that
+// low bits are equal to high bits, swap, check that the old value
+// has low and high bits equal.
+
+var hammer128 = map[string]func(*byte, int){
+	"AtomicCAS16B": hammerAtomicCAS16B,
+}
+
+func hammerAtomicCAS16B(addr *byte, count int) {
+	for i := 0; i < count; i++ {
+		for {
+			v := AtomicLoad16B(addr)
+			v0 := binary.LittleEndian.Uint64(v[:8])
+			v1 := binary.LittleEndian.Uint64(v[8:])
+			var vv [16]byte
+			binary.LittleEndian.PutUint64(vv[:8], v0+1)
+			binary.LittleEndian.PutUint64(vv[8:], v1-1)
+			if AtomicCAS16B(addr, &v[0], &vv[0]) {
+				break
+			}
+		}
+	}
+}
+
+func TestHammer128(t *testing.T) {
+	const p = 4
+	n := 10000
+	if testing.Short() {
+		n = 1000
+	}
+	defer runtime.GOMAXPROCS(runtime.GOMAXPROCS(p))
+
+	for name, testf := range hammer128 {
+		c := make(chan int)
+
+		val := MakeAlignedBlock(16, 16)
+		for i := 0; i < p; i++ {
+			go func() {
+				defer func() {
+					if err := recover(); err != nil {
+						t.Error(err.(string))
+					}
+					c <- 1
+				}()
+				testf(&val[0], n)
+			}()
+		}
+		for i := 0; i < p; i++ {
+			<-c
+		}
+		var exp [16]byte
+		binary.LittleEndian.PutUint64(exp[:8], uint64(n)*p)
+		binary.LittleEndian.PutUint64(exp[8:], -uint64(n)*p)
+		if !bytes.Equal(val, exp[:]) {
+			t.Fatalf("%s: val=%v want %v", name, val, exp)
+		}
+	}
+}
+
+func hammerStoreLoadUint128(t *testing.T, paddr unsafe.Pointer) {
+	addr := (*byte)(paddr)
+	v := AtomicLoad16B(addr)
+	v0 := binary.LittleEndian.Uint64(v[:8])
+	v1 := binary.LittleEndian.Uint64(v[8:])
+
+	if v0 != v1 {
+		t.Fatalf("Uint128: %#x != %#x", v0, v1)
+	}
+	var newV [16]byte
+	binary.LittleEndian.PutUint64(newV[:8], v0+1)
+	binary.LittleEndian.PutUint64(newV[8:], v1+1)
+
+	AtomicStore16B(addr, newV)
+}
+
+func TestHammerStoreLoad(t *testing.T) {
+	var tests []func(*testing.T, unsafe.Pointer)
+	tests = append(tests, hammerStoreLoadUint128)
+	n := int(1e6)
+	if testing.Short() {
+		n = int(1e4)
+	}
+	const procs = 8
+	defer runtime.GOMAXPROCS(runtime.GOMAXPROCS(procs))
+	for _, tt := range tests {
+		c := make(chan int)
+		var val uint64
+		for p := 0; p < procs; p++ {
+			go func() {
+				for i := 0; i < n; i++ {
+					tt(t, unsafe.Pointer(&val))
+				}
+				c <- 1
+			}()
+		}
+		for p := 0; p < procs; p++ {
+			<-c
+		}
+	}
+}
+
+func TestNilDeref(t *testing.T) {
+	funcs := [...]func(){
+		func() {
+			var a, b [16]byte
+			AtomicCAS16B(nil, &(a[0]), &(b[0]))
+		},
+		func() { AtomicLoad16B(nil) },
+		func() { AtomicStore16B(nil, [16]byte{0}) },
+	}
+	for _, f := range funcs {
+		func() {
+			defer func() {
+				runtime.GC()
+				recover()
+			}()
+			f()
+		}()
 	}
 }
 

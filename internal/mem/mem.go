@@ -12,9 +12,9 @@ func Alignment(block []byte, alignSize int) int {
 	return int(uintptr(unsafe.Pointer(&block[0])) & uintptr(alignSize-1))
 }
 
-// AlignedBlock returns []byte of size BlockSize aligned to a multiple
+// MakeAlignedBlock returns []byte of size BlockSize aligned to a multiple
 // of alignSize in memory (must be power of two).
-func AlignedBlock(blockSize, alignSize int) []byte {
+func MakeAlignedBlock(blockSize, alignSize int) []byte {
 	block := make([]byte, blockSize+alignSize)
 	if alignSize == 0 {
 		return block

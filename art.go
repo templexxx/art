@@ -1,6 +1,10 @@
 package artree
 
-import "github.com/templexxx/cpu"
+import (
+	"unsafe"
+
+	"github.com/templexxx/cpu"
+)
 
 func init() {
 	if !cpu.X86.HasCMPXCHG16B {
@@ -10,6 +14,7 @@ func init() {
 
 // ART implements The Adaptive Radix Tree.
 type ART struct {
+	root unsafe.Pointer
 }
 
 func (t *ART) Insert() {

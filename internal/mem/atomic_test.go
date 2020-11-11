@@ -8,10 +8,15 @@ import (
 )
 
 var (
-	magic128 = []uint8{1, 16, 12, 17, 17, 12, 16, 1, 1, 16, 12, 17, 16, 1, 17, 12}
+	magic128 = make([]byte, 16)
 )
 
-func TestCompareAndSwap16Bytes(t *testing.T) {
+func init() {
+	binary.LittleEndian.PutUint64(magic128[:8], 0xdeddeadbeefbeef)
+	binary.LittleEndian.PutUint64(magic128[8:], 0xdeddeadbeefbeef)
+}
+
+func TestAtomicCAS16B(t *testing.T) {
 
 	var x struct {
 		before []uint8
@@ -29,10 +34,10 @@ func TestCompareAndSwap16Bytes(t *testing.T) {
 	for val := uint64(1); val+val > val; val += val {
 
 		binary.LittleEndian.PutUint64(old[:8], val)
-		binary.LittleEndian.PutUint64(old[8:], val)
+		binary.LittleEndian.PutUint64(old[8:], ^val)
 
 		binary.LittleEndian.PutUint64(newV[:8], val+1)
-		binary.LittleEndian.PutUint64(newV[8:], val+2)
+		binary.LittleEndian.PutUint64(newV[8:], ^(val + 1))
 
 		copy(x.i, old)
 
@@ -45,8 +50,8 @@ func TestCompareAndSwap16Bytes(t *testing.T) {
 
 		copy(x.i, newV)
 
-		binary.LittleEndian.PutUint64(nnv[:8], val+3)
-		binary.LittleEndian.PutUint64(nnv[8:], val+4)
+		binary.LittleEndian.PutUint64(nnv[:8], val+2)
+		binary.LittleEndian.PutUint64(nnv[8:], ^(val + 2))
 
 		if AtomicCAS16B(&x.i[0], &old[0], &nnv[0]) {
 			t.Fatal("should not have swapped")

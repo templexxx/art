@@ -15,10 +15,16 @@ func init() {
 // ART implements The Adaptive Radix Tree.
 type ART struct {
 	root unsafe.Pointer
+	n    uint64
 }
 
-func (t *ART) Insert() {
+// Insert is used to add a newentry or update
+// an existing entry. Returns if updated.
+func (t *ART) Insert(key []byte, value unsafe.Pointer) bool {
+	if t.root == nil {
 
+	}
+	return false
 }
 
 func (t *ART) Search() {

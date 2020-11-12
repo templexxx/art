@@ -56,3 +56,15 @@ type Node256 struct {
 
 	children *[256]unsafe.Pointer
 }
+
+// newNode creates a Node2,
+// it's the minimum Node.
+func newNode() *Node2 {
+	n := &Node2{
+		header:   newHeader(),
+		leaf:     nil,
+		keys:     [2]byte{},
+		children: nil,
+	}
+	return n
+}

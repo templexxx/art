@@ -1,5 +1,11 @@
 package artree
 
+import (
+	"encoding/binary"
+
+	"github.com/templexxx/art/internal/mem"
+)
+
 // Header includes basic information of a node:
 // 1. Helping to
 // Struct(from lowest bit to highest bit):
@@ -14,3 +20,29 @@ package artree
 // level: node height, including prefix
 // prefix_len: node prefix length
 // prefix: node prefix
+
+const headerLen = 16
+
+const (
+	nodeTypeReserved = iota
+	node2Type
+	node5Type
+	node16Type
+	node32Type
+	node64Type
+	node256Type
+)
+
+// newHeader creates a new header.
+func newHeader() *byte {
+	p := mem.MakeAlignedBlock(16, 16)
+	binary.LittleEndian.PutUint32(p[:4], node2Type)
+	return &p[0]
+}
+
+// getNodeType gets node type from header.
+func getNodeType(h *byte) uint8 {
+
+	hb := mem.AtomicLoad16B(h)
+	return uint8(binary.LittleEndian.Uint32(hb[:4]) & 7)
+}

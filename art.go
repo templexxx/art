@@ -27,26 +27,28 @@ func New() *ART {
 // Insert inserts new entry, returns nil if succeed.
 //
 // set insertOnly true, if you don't want update old entry.
-//func (t *ART) Insert(key []byte, value unsafe.Pointer, insertOnly bool) (err error) {
-//
-//restart:
-//	needRestart := false
-//	var node, nextNode, parentNode unsafe.Pointer
-//	node = nil
-//	nextNode = t.root
-//	parentNode = nil
-//
-//	var nodeKey, parentKey uint8
-//	var level uint32 = 0
-//
-//	for {
-//		parentNode = node
-//		parentKey = nodeKey
-//		node = nextNode
-//
-//		goto restart
-//	}
-//}
+func (t *ART) Insert(key []byte, value unsafe.Pointer, insertOnly bool) (err error) {
+
+restart:
+	needRestart := false
+	var node, nextNode, parentNode unsafe.Pointer
+	node = nil
+	nextNode = t.root
+	parentNode = nil
+
+	var nodeKey, parentKey uint8
+	var level uint32 = 0
+
+	for {
+		parentNode = node
+		parentKey = nodeKey
+		node = nextNode
+		header := getNodeHeader(node)
+		nexLvl := level
+
+		goto restart
+	}
+}
 
 // Search searches key, returns value's pointer if found.
 //

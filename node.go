@@ -57,14 +57,20 @@ type Node256 struct {
 	children *[256]unsafe.Pointer
 }
 
-// newNode creates a Node2,
+// initNode creates a Node2,
 // it's the minimum Node.
-func newNode() *Node2 {
+func initNode() *Node2 {
 	n := &Node2{
-		header:   newHeader(),
+		header:   newNodeHeader(node2Type),
 		leaf:     nil,
 		keys:     [2]byte{},
 		children: nil,
 	}
 	return n
+}
+
+// getNodeHeader gets header pointer from node pointer.
+// header is the first field of every node type, so it will work.
+func getNodeHeader(p unsafe.Pointer) *byte {
+	return *(**byte)(unsafe.Pointer(p))
 }

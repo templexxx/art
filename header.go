@@ -33,10 +33,10 @@ const (
 	node256Type
 )
 
-// newHeader creates a new header.
-func newHeader() *byte {
+// newNodeHeader creates a new header with specified node.
+func newNodeHeader(nodeType uint32) *byte {
 	p := mem.MakeAlignedBlock(16, 16)
-	binary.LittleEndian.PutUint32(p[:4], node2Type)
+	binary.LittleEndian.PutUint32(p[:4], nodeType)
 	return &p[0]
 }
 

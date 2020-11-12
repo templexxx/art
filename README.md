@@ -37,7 +37,7 @@ There is no mature implementation in present.
 
 ## Platform
 
-Only supports X86-64 which has CMPXCHG16B feature:
+Only supports X86-64 which has CMPXCHG16B feature (only early processors laked it):
 
 16bytes value could be accessed atomically.
 

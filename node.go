@@ -19,5 +19,15 @@ func initNode() *Node2 {
 // getNodeHeader gets header pointer from node pointer.
 // header is the first field of every node type, so it will work.
 func getNodeHeader(p unsafe.Pointer) *byte {
-	return *(**byte)(unsafe.Pointer(p))
+	return *(**byte)(p)
+}
+
+// hasLeaf returns true if the node has leaf.
+func hasLeaf(p unsafe.Pointer) bool {
+	return getLeaf(p) != nil
+}
+
+// getLeaf gets node's leaf.
+func getLeaf(p unsafe.Pointer) unsafe.Pointer {
+	return unsafe.Pointer(*(**uint8)(unsafe.Pointer(uintptr(p) + 8)))
 }

@@ -73,3 +73,21 @@ func TestGetNodeHeader(t *testing.T) {
 		t.Fatal("node256 type mismatch")
 	}
 }
+
+func TestNodeIsLeaf(t *testing.T) {
+	var v uint8 = 1
+	n2 := &Node2{
+		header:   newNodeHeader(node2Type),
+		leaf:     unsafe.Pointer(&v),
+		keys:     [2]byte{},
+		children: nil,
+	}
+
+	if !hasLeaf(unsafe.Pointer(n2)) {
+		t.Fatal("should has leaf")
+	}
+	n2.leaf = nil
+	if hasLeaf(unsafe.Pointer(n2)) {
+		t.Fatal("shouldn't have leaf")
+	}
+}

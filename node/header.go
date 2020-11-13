@@ -1,4 +1,4 @@
-package art
+package node
 
 import (
 	"encoding/binary"
@@ -40,9 +40,20 @@ func newNodeHeader(nodeType uint32) *byte {
 	return &p[0]
 }
 
+// load loads header to a new address, and return the address.
+func load(p *byte) *byte {
+	hb := mem.AtomicLoad16B(p)
+	return &hb[0]
+}
+
 // getNodeType gets node type from header.
+// h must be returned by func load.
 func getNodeType(h *byte) uint8 {
 
 	hb := mem.AtomicLoad16B(h)
 	return uint8(binary.LittleEndian.Uint32(hb[:4]) & 7)
+}
+
+func isObsolete(h *byte) bool {
+
 }

@@ -1,4 +1,4 @@
-package artree
+package art
 
 import "unsafe"
 

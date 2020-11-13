@@ -1,4 +1,4 @@
-package artree
+package art
 
 import (
 	"testing"
@@ -75,7 +75,7 @@ func TestGetNodeHeader(t *testing.T) {
 }
 
 func TestNodeIsLeaf(t *testing.T) {
-	var v uint8 = 1
+	var v uint64 = 1
 	n2 := &Node2{
 		header:   newNodeHeader(node2Type),
 		leaf:     unsafe.Pointer(&v),

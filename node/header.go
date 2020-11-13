@@ -2,6 +2,7 @@ package node
 
 import (
 	"encoding/binary"
+	"unsafe"
 
 	"github.com/templexxx/art/internal/mem"
 )
@@ -50,10 +51,24 @@ func load(p *byte) *byte {
 // h must be returned by func load.
 func getNodeType(h *byte) uint8 {
 
-	hb := mem.AtomicLoad16B(h)
-	return uint8(binary.LittleEndian.Uint32(hb[:4]) & 7)
+	return *h & 7
 }
 
+// isObsolete returns node is obsolete or not.
+// h must be returned by func load.
 func isObsolete(h *byte) bool {
 
+	if (*h>>3)&1 == 1 {
+		return true
+	}
+	return false
+}
+
+// setObsolete sets node obsolete.
+func setObsolete(h, old *byte) bool {
+
+	oldb := (*[16]byte)(unsafe.Pointer(old))
+	newb := *oldb
+	newb[0] = newb[0] | (1 << 3)
+	return mem.AtomicCAS16B(h, old, &newb[0])
 }

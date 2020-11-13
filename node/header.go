@@ -34,10 +34,12 @@ const (
 	node256Type
 )
 
-// newNodeHeader creates a new header with specified node.
-func newNodeHeader(nodeType uint32) *byte {
+// makeNodeHeader makes a new header with specified node type and its level.
+// level won't change in node's whole life.
+func makeNodeHeader(nodeType, level uint32) *byte {
 	p := mem.MakeAlignedBlock(16, 16)
-	binary.LittleEndian.PutUint32(p[:4], nodeType)
+	n := nodeType | level<<5
+	binary.LittleEndian.PutUint32(p[:4], n)
 	return &p[0]
 }
 
@@ -65,10 +67,20 @@ func isObsolete(h *byte) bool {
 }
 
 // setObsolete sets node obsolete.
+// h is the origin header address.
+// old is the loaded header address.
 func setObsolete(h, old *byte) bool {
 
 	oldb := (*[16]byte)(unsafe.Pointer(old))
 	newb := *oldb
 	newb[0] = newb[0] | (1 << 3)
 	return mem.AtomicCAS16B(h, old, &newb[0])
+}
+
+// getLevel gets node level.
+// h must be returned by func load.
+func getLevel(h *byte) uint32 {
+
+	hb := (*[16]byte)(unsafe.Pointer(h))
+	return binary.LittleEndian.Uint32((*hb)[:4]) >> 5 & (1<<23 - 1)
 }

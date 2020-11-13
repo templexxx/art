@@ -7,7 +7,7 @@ import (
 
 func TestGetNodeHeader(t *testing.T) {
 	n2 := &Node2{
-		header:   newNodeHeader(node2Type),
+		header:   makeNodeHeader(node2Type, 0),
 		leaf:     nil,
 		keys:     [2]byte{},
 		children: nil,
@@ -18,7 +18,7 @@ func TestGetNodeHeader(t *testing.T) {
 	}
 
 	n5 := &Node5{
-		header:   newNodeHeader(node5Type),
+		header:   makeNodeHeader(node5Type, 0),
 		leaf:     nil,
 		keys:     [5]byte{},
 		children: nil,
@@ -31,7 +31,7 @@ func TestGetNodeHeader(t *testing.T) {
 	keys := make([]byte, 256)
 
 	n16 := &Node16{
-		header:   newNodeHeader(node16Type),
+		header:   makeNodeHeader(node16Type, 0),
 		leaf:     nil,
 		keys:     &keys[:16][0],
 		children: nil,
@@ -42,7 +42,7 @@ func TestGetNodeHeader(t *testing.T) {
 	}
 
 	n32 := &Node32{
-		header:   newNodeHeader(node32Type),
+		header:   makeNodeHeader(node32Type, 0),
 		leaf:     nil,
 		keys:     &keys[:32][0],
 		children: nil,
@@ -53,7 +53,7 @@ func TestGetNodeHeader(t *testing.T) {
 	}
 
 	n64 := &Node64{
-		header:   newNodeHeader(node64Type),
+		header:   makeNodeHeader(node64Type, 0),
 		leaf:     nil,
 		indexes:  &keys[:][0],
 		children: nil,
@@ -64,7 +64,7 @@ func TestGetNodeHeader(t *testing.T) {
 	}
 
 	n256 := &Node256{
-		header:   newNodeHeader(node256Type),
+		header:   makeNodeHeader(node256Type, 0),
 		leaf:     nil,
 		children: nil,
 	}
@@ -77,7 +77,7 @@ func TestGetNodeHeader(t *testing.T) {
 func TestNodeIsLeaf(t *testing.T) {
 	var v uint64 = 1
 	n2 := &Node2{
-		header:   newNodeHeader(node2Type),
+		header:   makeNodeHeader(node2Type, 0),
 		leaf:     unsafe.Pointer(&v),
 		keys:     [2]byte{},
 		children: nil,

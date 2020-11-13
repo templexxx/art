@@ -6,9 +6,9 @@ import (
 
 // initNode creates a Node2,
 // it's the minimum Node.
-func initNode() *Node2 {
+func initNode(level uint32) *Node2 {
 	n := &Node2{
-		header:   newNodeHeader(node2Type),
+		header:   makeNodeHeader(node2Type, level),
 		leaf:     nil,
 		keys:     [2]byte{},
 		children: nil,

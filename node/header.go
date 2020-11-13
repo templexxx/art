@@ -22,6 +22,8 @@ import (
 // prefix_len: node prefix length
 // prefix: node prefix
 
+// TODO add header pool
+
 const headerLen = 16
 
 const (
@@ -83,4 +85,10 @@ func getLevel(h *byte) uint32 {
 
 	hb := (*[16]byte)(unsafe.Pointer(h))
 	return binary.LittleEndian.Uint32((*hb)[:4]) >> 5 & (1<<23 - 1)
+}
+
+// getPrefix gets node prefix and its length.
+// h must be returned by func load.
+func getPrefix(h *byte) (prefixLen uint8, prefix *byte) {
+
 }

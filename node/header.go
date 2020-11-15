@@ -121,3 +121,46 @@ func setPrefix(h, old *byte, prefix []byte) bool {
 
 	return mem.AtomicCAS16B(h, old, &newb[0])
 }
+
+// isLocked returns node is locked or not.
+// h must be returned by func load.
+func isLocked(h *byte) bool {
+	if (*h>>4)&1 == 1 {
+		return true
+	}
+	return false
+}
+
+// lock sets node locked.
+// h is the origin header address.
+// old is the loaded header address.
+//
+// Returns false if lock failed or already locked.
+func lock(h, old *byte) bool {
+
+	if isLocked(old) {
+		return false
+	}
+
+	oldb := (*[16]byte)(unsafe.Pointer(old))
+	newb := *oldb
+	newb[0] = newb[0] | (1 << 4)
+	return mem.AtomicCAS16B(h, old, &newb[0])
+}
+
+// lock sets node unlocked.
+// h is the origin header address.
+// old is the loaded header address.
+//
+// Returns false if unlock failed. TODO panic outside?
+func unlock(h, old *byte) bool {
+
+	if !isLocked(old) {
+		return true
+	}
+
+	oldb := (*[16]byte)(unsafe.Pointer(old))
+	newb := *oldb
+	newb[0] = newb[0] ^ (1 << 4)
+	return mem.AtomicCAS16B(h, old, &newb[0])
+}

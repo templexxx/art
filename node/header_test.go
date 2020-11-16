@@ -73,7 +73,7 @@ func TestSetPrefix(t *testing.T) {
 		t.Fatal("prefix length mismatch")
 	}
 	prefix = getPrefix(hl, pl)
-	if !bytes.Equal(prefix, []byte{1,2}) {
+	if !bytes.Equal(prefix, []byte{1, 2}) {
 		t.Fatal("prefix mismatch")
 	}
 
@@ -85,5 +85,30 @@ func TestSetPrefix(t *testing.T) {
 	}
 	if isObsolete(hl) {
 		t.Fatal("node should not be obsolete")
+	}
+}
+
+func TestLock(t *testing.T) {
+
+	h := makeNodeHeader(node2Type, 4)
+
+	hl := load(h)
+	if !lock(h, hl) {
+		t.Fatal("lock should be ok")
+	}
+
+	hl = load(h)
+	if !isLocked(h) {
+		t.Fatal("should be locked")
+	}
+
+	hl = load(h)
+	if !unlock(h, hl) {
+		t.Fatal("unlock should be ok")
+	}
+
+	hl = load(h)
+	if isLocked(h) {
+		t.Fatal("should be unlocked")
 	}
 }

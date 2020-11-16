@@ -3,10 +3,10 @@ package nodes
 import "unsafe"
 
 type Node16 struct {
-	header *byte
+	Header *byte
 
-	leaf unsafe.Pointer
+	Leaf unsafe.Pointer
 
-	keys     *byte // [16]byte, could use SSE
-	children *[16]unsafe.Pointer
+	Keys     *byte // [16]byte, could use SSE
+	Children *[16]unsafe.Pointer
 }

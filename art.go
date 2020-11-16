@@ -22,7 +22,10 @@ type ART struct {
 
 func New() *ART {
 	return &ART{
-		root: unsafe.Pointer(nodes.initNode()),
+		// Init with Node256Type, because we assume the root will grow up quickly,
+		// much faster than other inner nodes at least.
+		// For avoiding keeping creating new nodes, we set the root with biggest inner node.
+		root: nodes.CreateNode(nodes.Node256Type, 0),
 	}
 }
 
@@ -54,7 +57,15 @@ restart:
 		var prefixLen uint8 = 0
 		prefix := make([]byte, 12)
 
-		goto restart
+		switch nodes.CheckPrefix() {
+		case nodes.PrefixSkippedLevel:
+			goto restart
+		case nodes.PrefixMismatch:
+
+		default: // Match.
+
+		}
+
 	}
 }
 

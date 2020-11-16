@@ -8,7 +8,7 @@ import (
 func TestMakeNodeHeader(t *testing.T) {
 
 	for i := 0; i < 256; i++ {
-		for j := node2Type; j <= node256Type; j++ {
+		for j := Node2Type; j <= Node256Type; j++ {
 			h := makeNodeHeader(uint8(j), uint32(i))
 
 			hl := LoadHeader(h)
@@ -24,7 +24,7 @@ func TestMakeNodeHeader(t *testing.T) {
 }
 
 func TestIsObsolete(t *testing.T) {
-	h := makeNodeHeader(node2Type, 1)
+	h := makeNodeHeader(Node2Type, 1)
 	hl := LoadHeader(h)
 
 	if isObsolete(hl) {
@@ -40,7 +40,7 @@ func TestIsObsolete(t *testing.T) {
 	}
 
 	hl = LoadHeader(h)
-	if getNodeType(hl) != node2Type {
+	if getNodeType(hl) != Node2Type {
 		t.Fatal("node type mismatch")
 	}
 	if getLevel(hl) != 1 {
@@ -52,7 +52,7 @@ func TestIsObsolete(t *testing.T) {
 }
 
 func TestSetPrefix(t *testing.T) {
-	h := makeNodeHeader(node2Type, 3)
+	h := makeNodeHeader(Node2Type, 3)
 
 	hl := LoadHeader(h)
 	if !setPrefix(h, hl, []byte{1, 2}) {
@@ -77,7 +77,7 @@ func TestSetPrefix(t *testing.T) {
 		t.Fatal("prefix mismatch")
 	}
 
-	if getNodeType(hl) != node2Type {
+	if getNodeType(hl) != Node2Type {
 		t.Fatal("node type mismatch")
 	}
 	if getLevel(hl) != 3 {
@@ -90,7 +90,7 @@ func TestSetPrefix(t *testing.T) {
 
 func TestLock(t *testing.T) {
 
-	h := makeNodeHeader(node2Type, 4)
+	h := makeNodeHeader(Node2Type, 4)
 
 	hl := LoadHeader(h)
 	if !lock(h, hl) {

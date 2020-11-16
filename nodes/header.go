@@ -27,12 +27,12 @@ const headerLen = 16
 
 const (
 	nodeTypeReserved = iota
-	node2Type
-	node5Type
-	node16Type
-	node32Type
-	node64Type
-	node256Type
+	Node2Type
+	Node5Type
+	Node16Type
+	Node32Type
+	Node64Type
+	Node256Type
 )
 
 // makeNodeHeader makes a new header with specified node type and its level.

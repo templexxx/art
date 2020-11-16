@@ -4,16 +4,53 @@ import (
 	"unsafe"
 )
 
-// initNode creates a Node2,
-// it's the minimum Node.
-func initNode(level uint32) *Node2 {
-	n := &Node2{
-		header:   makeNodeHeader(node2Type, level),
-		leaf:     nil,
-		keys:     [2]byte{},
-		children: nil,
+// CreateNode creates a new node by nodeType and its level.
+func CreateNode(nodeType uint8, level uint32) unsafe.Pointer {
+	switch nodeType {
+
+	case Node2Type:
+		return unsafe.Pointer(&Node2{
+			Header:   makeNodeHeader(Node2Type, level),
+			Leaf:     nil,
+			Children: nil,
+		})
+
+	case Node5Type:
+		return unsafe.Pointer(&Node5{
+			Header:   makeNodeHeader(Node5Type, level),
+			Leaf:     nil,
+			Children: nil,
+		})
+
+	case Node16Type:
+		return unsafe.Pointer(&Node16{
+			Header:   makeNodeHeader(Node16Type, level),
+			Leaf:     nil,
+			Keys:     nil,
+			Children: nil,
+		})
+
+	case Node32Type:
+		return unsafe.Pointer(&Node32{
+			Header:   makeNodeHeader(Node32Type, level),
+			Leaf:     nil,
+			Keys:     nil,
+			Children: nil,
+		})
+	case Node64Type:
+		return unsafe.Pointer(&Node64{
+			Header:   makeNodeHeader(Node64Type, level),
+			Leaf:     nil,
+			Indexes:  nil,
+			Children: nil,
+		})
+	default: // Node256Type.
+		return unsafe.Pointer(&Node256{
+			Header:   makeNodeHeader(Node256Type, level),
+			Leaf:     nil,
+			Children: nil,
+		})
 	}
-	return n
 }
 
 // GetHeader gets header pointer from node pointer.
@@ -37,11 +74,17 @@ func getLeaf(node unsafe.Pointer) unsafe.Pointer {
 	return unsafe.Pointer(*(**uint8)(unsafe.Pointer(uintptr(node) + 8)))
 }
 
-// checkPrefix checks prefix in a pessimistic way:
+const (
+	PrefixMatch = iota
+	PrefixMismatch
+	PrefixSkippedLevel
+)
+
+// CheckPrefix checks prefix in a pessimistic way:
 // Compare search key before proceeding to the next child.
 //
 // For supporting optimistic way, we have to keep the whole key in memory too,
 // I prefer to save memory, although it needs more comparisons.
-func checkPrefix(node unsafe.Pointer, key []byte, level uint32, nonMatchingKey uint8, header *byte) {
-
+func CheckPrefix(node unsafe.Pointer, key []byte, level uint32, nonMatchingKey uint8, header *byte) uint8 {
+	return PrefixMismatch
 }

@@ -3,10 +3,10 @@ package nodes
 import "unsafe"
 
 type Node32 struct {
-	header *byte
+	Header *byte
 
-	leaf unsafe.Pointer
+	Leaf unsafe.Pointer
 
-	keys     *byte // [32]byte, could use AVX
-	children *[32]unsafe.Pointer
+	Keys     *byte // [32]byte, could use AVX
+	Children *[32]unsafe.Pointer
 }

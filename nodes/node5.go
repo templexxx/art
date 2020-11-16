@@ -3,10 +3,10 @@ package nodes
 import "unsafe"
 
 type Node5 struct {
-	header *byte
+	Header *byte
 
-	leaf unsafe.Pointer
+	Leaf unsafe.Pointer
 
-	keys     [5]byte
-	children *[5]unsafe.Pointer
+	Keys     [5]byte
+	Children *[5]unsafe.Pointer
 }

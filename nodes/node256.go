@@ -3,9 +3,9 @@ package nodes
 import "unsafe"
 
 type Node256 struct {
-	header *byte
+	Header *byte
 
-	leaf unsafe.Pointer
+	Leaf unsafe.Pointer
 
-	children *[256]unsafe.Pointer
+	Children *[256]unsafe.Pointer
 }

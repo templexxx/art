@@ -3,10 +3,10 @@ package nodes
 import "unsafe"
 
 type Node64 struct {
-	header *byte
+	Header *byte
 
-	leaf unsafe.Pointer
+	Leaf unsafe.Pointer
 
-	indexes  *byte // [256]byte, indicating char -> children[i]
-	children *[64]unsafe.Pointer
+	Indexes  *byte // [256]byte, indicating char -> Children[i]
+	Children *[64]unsafe.Pointer
 }

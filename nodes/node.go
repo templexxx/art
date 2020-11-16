@@ -85,6 +85,7 @@ const (
 //
 // For supporting optimistic way, we have to keep the whole key in memory too,
 // I prefer to save memory, although it needs more comparisons.
-func CheckPrefix(node unsafe.Pointer, key []byte, level uint32, nonMatchingKey uint8, header *byte) uint8 {
+// (Actually, the pure pessimistic way may waste more memory, if the keys are too sparse.)
+func CheckPrefix(node unsafe.Pointer, key []byte, level uint32, nonMatchingKey uint8, remainPrefix []byte) uint8 {
 	return PrefixMismatch
 }

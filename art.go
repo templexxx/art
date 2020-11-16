@@ -49,15 +49,15 @@ restart:
 		parentKey = nodeKey
 		node = nextNode
 
-		header := nodes.LoadNodeHeader(node)
+		header := nodes.GetHeader(node)
 		nexLvl := level
 
 		var nonMatchingKey uint8
 
 		var prefixLen uint8 = 0
-		prefix := make([]byte, 12)
+		remainPrefix := make([]byte, 12)
 
-		switch nodes.CheckPrefix() {
+		switch nodes.CheckPrefix(node, key, nexLvl, nonMatchingKey, remainPrefix) {
 		case nodes.PrefixSkippedLevel:
 			goto restart
 		case nodes.PrefixMismatch:

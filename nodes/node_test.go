@@ -1,4 +1,4 @@
-package node
+package nodes
 
 import (
 	"testing"
@@ -13,7 +13,7 @@ func TestGetNodeHeader(t *testing.T) {
 		children: nil,
 	}
 
-	if getNodeType(getNodeHeader(unsafe.Pointer(n2))) != node2Type {
+	if getNodeType(GetHeader(unsafe.Pointer(n2))) != node2Type {
 		t.Fatal("node2 type mismatch")
 	}
 
@@ -24,7 +24,7 @@ func TestGetNodeHeader(t *testing.T) {
 		children: nil,
 	}
 
-	if getNodeType(getNodeHeader(unsafe.Pointer(n5))) != node5Type {
+	if getNodeType(GetHeader(unsafe.Pointer(n5))) != node5Type {
 		t.Fatal("node5 type mismatch")
 	}
 
@@ -37,7 +37,7 @@ func TestGetNodeHeader(t *testing.T) {
 		children: nil,
 	}
 
-	if getNodeType(getNodeHeader(unsafe.Pointer(n16))) != node16Type {
+	if getNodeType(GetHeader(unsafe.Pointer(n16))) != node16Type {
 		t.Fatal("node16 type mismatch")
 	}
 
@@ -48,7 +48,7 @@ func TestGetNodeHeader(t *testing.T) {
 		children: nil,
 	}
 
-	if getNodeType(getNodeHeader(unsafe.Pointer(n32))) != node32Type {
+	if getNodeType(GetHeader(unsafe.Pointer(n32))) != node32Type {
 		t.Fatal("node32 type mismatch")
 	}
 
@@ -59,7 +59,7 @@ func TestGetNodeHeader(t *testing.T) {
 		children: nil,
 	}
 
-	if getNodeType(getNodeHeader(unsafe.Pointer(n64))) != node64Type {
+	if getNodeType(GetHeader(unsafe.Pointer(n64))) != node64Type {
 		t.Fatal("node64 type mismatch")
 	}
 
@@ -69,7 +69,7 @@ func TestGetNodeHeader(t *testing.T) {
 		children: nil,
 	}
 
-	if getNodeType(getNodeHeader(unsafe.Pointer(n256))) != node256Type {
+	if getNodeType(GetHeader(unsafe.Pointer(n256))) != node256Type {
 		t.Fatal("node256 type mismatch")
 	}
 }

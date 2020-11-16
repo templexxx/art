@@ -3,6 +3,8 @@ package art
 import (
 	"unsafe"
 
+	"github.com/templexxx/art/nodes"
+
 	"github.com/templexxx/cpu"
 )
 
@@ -20,7 +22,7 @@ type ART struct {
 
 func New() *ART {
 	return &ART{
-		root: unsafe.Pointer(node.initNode()),
+		root: unsafe.Pointer(nodes.initNode()),
 	}
 }
 
@@ -43,10 +45,14 @@ restart:
 		parentNode = node
 		parentKey = nodeKey
 		node = nextNode
-		header := node.getNodeHeader(node)
+
+		header := nodes.LoadNodeHeader(node)
 		nexLvl := level
 
 		var nonMatchingKey uint8
+
+		var prefixLen uint8 = 0
+		prefix := make([]byte, 12)
 
 		goto restart
 	}

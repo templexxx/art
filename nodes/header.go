@@ -1,4 +1,4 @@
-package node
+package nodes
 
 import (
 	"encoding/binary"
@@ -46,21 +46,21 @@ func makeNodeHeader(nodeType uint8, level uint32) *byte {
 	return &p[0]
 }
 
-// load loads header to a new address, and return the address.
-func load(p *byte) *byte {
+// LoadHeader loads header to a new address, and return the address.
+func LoadHeader(p *byte) *byte {
 	hb := mem.AtomicLoad16B(p)
 	return &hb[0]
 }
 
 // getNodeType gets node type from header.
-// h must be returned by func load.
+// h must be returned by func LoadHeader.
 func getNodeType(h *byte) uint8 {
 
 	return *h & 7
 }
 
 // isObsolete returns node is obsolete or not.
-// h must be returned by func load.
+// h must be returned by func LoadHeader.
 func isObsolete(h *byte) bool {
 
 	if (*h>>3)&1 == 1 {
@@ -81,7 +81,7 @@ func setObsolete(h, old *byte) bool {
 }
 
 // getLevel gets node level.
-// h must be returned by func load.
+// h must be returned by func LoadHeader.
 func getLevel(h *byte) uint32 {
 
 	hb := (*[16]byte)(unsafe.Pointer(h))
@@ -89,7 +89,7 @@ func getLevel(h *byte) uint32 {
 }
 
 // getPrefixLen gets node prefix length.
-// h must be returned by func load.
+// h must be returned by func LoadHeader.
 func getPrefixLen(h *byte) (prefixLen uint8) {
 
 	hb := (*[16]byte)(unsafe.Pointer(h))
@@ -97,7 +97,7 @@ func getPrefixLen(h *byte) (prefixLen uint8) {
 }
 
 // getPrefix gets node prefix.
-// h must be returned by func load.
+// h must be returned by func LoadHeader.
 func getPrefix(h *byte, pLen uint8) []byte {
 
 	if pLen == 0 {
@@ -125,7 +125,7 @@ func setPrefix(h, old *byte, prefix []byte) bool {
 }
 
 // isLocked returns node is locked or not.
-// h must be returned by func load.
+// h must be returned by func LoadHeader.
 func isLocked(h *byte) bool {
 	if (*h>>4)&1 == 1 {
 		return true

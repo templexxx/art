@@ -1,4 +1,4 @@
-package node
+package nodes
 
 import (
 	"bytes"
@@ -11,7 +11,7 @@ func TestMakeNodeHeader(t *testing.T) {
 		for j := node2Type; j <= node256Type; j++ {
 			h := makeNodeHeader(uint8(j), uint32(i))
 
-			hl := load(h)
+			hl := LoadHeader(h)
 
 			if getNodeType(hl) != uint8(j) {
 				t.Fatal("new header node type mismatch")
@@ -25,7 +25,7 @@ func TestMakeNodeHeader(t *testing.T) {
 
 func TestIsObsolete(t *testing.T) {
 	h := makeNodeHeader(node2Type, 1)
-	hl := load(h)
+	hl := LoadHeader(h)
 
 	if isObsolete(hl) {
 		t.Fatal("node should not be obsolete")
@@ -39,7 +39,7 @@ func TestIsObsolete(t *testing.T) {
 		t.Fatal("node should be obsolete")
 	}
 
-	hl = load(h)
+	hl = LoadHeader(h)
 	if getNodeType(hl) != node2Type {
 		t.Fatal("node type mismatch")
 	}
@@ -54,7 +54,7 @@ func TestIsObsolete(t *testing.T) {
 func TestSetPrefix(t *testing.T) {
 	h := makeNodeHeader(node2Type, 3)
 
-	hl := load(h)
+	hl := LoadHeader(h)
 	if !setPrefix(h, hl, []byte{1, 2}) {
 		t.Fatal("set prefix should be ok")
 	}
@@ -67,7 +67,7 @@ func TestSetPrefix(t *testing.T) {
 		t.Fatal("prefix mismatch", prefix)
 	}
 
-	hl = load(h)
+	hl = LoadHeader(h)
 	pl = getPrefixLen(hl)
 	if pl != 2 {
 		t.Fatal("prefix length mismatch")
@@ -92,22 +92,22 @@ func TestLock(t *testing.T) {
 
 	h := makeNodeHeader(node2Type, 4)
 
-	hl := load(h)
+	hl := LoadHeader(h)
 	if !lock(h, hl) {
 		t.Fatal("lock should be ok")
 	}
 
-	hl = load(h)
+	hl = LoadHeader(h)
 	if !isLocked(h) {
 		t.Fatal("should be locked")
 	}
 
-	hl = load(h)
+	hl = LoadHeader(h)
 	if !unlock(h, hl) {
 		t.Fatal("unlock should be ok")
 	}
 
-	hl = load(h)
+	hl = LoadHeader(h)
 	if isLocked(h) {
 		t.Fatal("should be unlocked")
 	}

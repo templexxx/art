@@ -10,21 +10,22 @@ import (
 // Header includes basic information of a node:
 // 1. Helping to
 // Struct(from lowest bit to highest bit):
-// +---------+-------------+-----------+-----------+---------------+------------+
-// | type(3) | obsolete(1) | locked(1) | level(23) | prefix_len(4) | prefix(96) |
-// +---------+-------------+-----------+-----------+---------------+------------+
-// 0                                                                           128
+// +---------+-------------+-----------+-----------+---------------+------------+-------------+
+// | type(3) | obsolete(1) | locked(1) | level(23) | prefix_len(4) | prefix(64) | padding(32) |
+// +---------+-------------+-----------+-----------+---------------+------------+-------------+
+// 0                                                              32           96            128
 //
 // type: node type
 // obsolete: node is obsolete or not, 1 means obsolete
 // locked: node is locked or not, 1 means locked
 // level: node height, including prefix
 // prefix_len: node prefix length
-// prefix: node prefix
+// prefix: node prefix, 8bytes at most, suitable for one register
+// padding: the whole valid header is 12bytes, 4bytes for padding
 
 // TODO add header pool
 
-const headerLen = 16
+const headerLen = 12
 
 const (
 	nodeTypeReserved = iota

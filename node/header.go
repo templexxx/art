@@ -88,19 +88,12 @@ func getLevel(h *byte) uint32 {
 	return binary.LittleEndian.Uint32((*hb)[:4]) >> 5 & (1<<23 - 1)
 }
 
-<<<<<<< HEAD
-// getPrefix gets node prefix and its length.
-// h must be returned by func load.
-func getPrefix(h *byte) (prefixLen uint8, prefix *byte) {
-
-}
-=======
 // getPrefixLen gets node prefix length.
 // h must be returned by func load.
 func getPrefixLen(h *byte) (prefixLen uint8) {
 
 	hb := (*[16]byte)(unsafe.Pointer(h))
-	return uint8(binary.LittleEndian.Uint32((*hb)[:4]) >> 28 & (1<<4-1))
+	return uint8(binary.LittleEndian.Uint32((*hb)[:4]) >> 28 & (1<<4 - 1))
 }
 
 // getPrefix gets node prefix.
@@ -112,7 +105,7 @@ func getPrefix(h *byte, pLen uint8) []byte {
 	}
 
 	hb := (*[16]byte)(unsafe.Pointer(h))
-	return (*hb)[4:4+pLen]
+	return (*hb)[4 : 4+pLen]
 }
 
 // setPrefix sets node prefix.
@@ -121,10 +114,10 @@ func getPrefix(h *byte, pLen uint8) []byte {
 func setPrefix(h, old *byte, prefix []byte) bool {
 
 	oldb := (*[16]byte)(unsafe.Pointer(old))
-	oldPrefixLen := binary.LittleEndian.Uint32((*oldb)[:4]) >> 28 & (1<<4-1)
+	oldPrefixLen := binary.LittleEndian.Uint32((*oldb)[:4]) >> 28 & (1<<4 - 1)
 	newb := *oldb
 	prefixLen := len(prefix)
-	tmpU32 := (binary.LittleEndian.Uint32(newb[:4]) ^ (oldPrefixLen<<28)) | (uint32(prefixLen) << 28)
+	tmpU32 := (binary.LittleEndian.Uint32(newb[:4]) ^ (oldPrefixLen << 28)) | (uint32(prefixLen) << 28)
 	binary.LittleEndian.PutUint32(newb[:4], tmpU32)
 	copy(newb[4:], prefix)
 
@@ -173,4 +166,3 @@ func unlock(h, old *byte) bool {
 	newb[0] = newb[0] ^ (1 << 4)
 	return mem.AtomicCAS16B(h, old, &newb[0])
 }
->>>>>>> c49e2d795fc1e26ce689083ff4195dffc5d03470

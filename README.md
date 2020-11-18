@@ -24,7 +24,7 @@ Adaptive Radix Tree overcomes these shortcomings.
 
 You could find more details in [`<The Adaptive Radix Tree: ARTful Indexing for Main-Memory Databases>`](https://db.in.tum.de/~leis/papers/ART.pdf).
 
-What's more, one important invariant of ART is that every insertion/deletion order results in the same tree because there are no rebalancing operations.
+What's more, one important invariant of ART is that every insertion/deletion order results in the same tree because there are no re-balancing operations.
 Which means it's easier to implement thread-safe structure.
 
 ## Why Adaptive Radix Tree is not popular
